@@ -267,6 +267,10 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
                     .setValidators(controls.get(`max_votes_amount`).validator);
                 this.contentForm
                     .get(`votes_amount`)
+                    .get(`max_yes_votes_amount`)
+                    .setValidators(controls.get(`max_yes_votes_amount`).validator);
+                this.contentForm
+                    .get(`votes_amount`)
                     .get(`max_votes_per_option`)
                     .setValidators(controls.get(`max_votes_per_option`).validator);
             }
@@ -374,6 +378,15 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     public showMaxVotesPerOption(data: any): boolean {
         const selectedPollMethod: FormPollMethod = this.pollMethodControl.value;
         return selectedPollMethod === FormPollMethod.Y && (!data || !data.state || data.isCreated);
+    }
+
+    public showMaxYesVotes(data: any): boolean {
+        const selectedPollMethod: FormPollMethod = this.pollMethodControl.value;
+        return (
+            (selectedPollMethod === FormPollMethod.YNA || selectedPollMethod === FormPollMethod.YN) &&
+            this.allowToSetMinMax &&
+            (!data || !data.state || data.isCreated)
+        );
     }
 
     /**
@@ -522,6 +535,10 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
                     this.pollService.getVerboseNameForKey(`min_votes_amount`),
                     data[`min_votes_amount`]
                 ]);
+                this.pollValues.push([
+                    this.pollService.getVerboseNameForKey(`max_yes_votes_amount`),
+                    data[`max_yes_votes_amount`]
+                ]);
             }
 
             if (pollMethod === FormPollMethod.Y || pollMethod === FormPollMethod.N) {
@@ -574,6 +591,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         const config = {
             max_votes_amount: [maxVotesPreselect, [Validators.required, Validators.min(1)]],
             min_votes_amount: [1, [Validators.required, Validators.min(1)]],
+            max_yes_votes_amount: [maxVotesPreselect, [Validators.required, Validators.min(1)]],
             max_votes_per_option: [1, [Validators.required, Validators.min(1)]]
         };
         if (this.allowToSetMinMax) {

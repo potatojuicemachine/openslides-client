@@ -109,6 +109,21 @@
                                 }
                             </mat-form-field>
                         }
+                        <!-- Max Amount of Yes Votes -->
+                        @if (showMaxYesVotes(data)) {
+                            <mat-form-field class="fourth">
+                                <mat-label>{{ PollPropertyVerbose.max_yes_votes_amount | translate }}</mat-label>
+                                <input
+                                    formControlName="max_yes_votes_amount"
+                                    matInput
+                                    min="1"
+                                    required
+                                    type="number"
+                                    [errorStateMatcher]="parentErrorStateMatcher"
+                                />
+                            </mat-form-field>
+                        }
+
                     </ng-container>
                 }
                 <!-- Second row with span over 2nd and 3rd column if max amount of votes per option is enabled-->

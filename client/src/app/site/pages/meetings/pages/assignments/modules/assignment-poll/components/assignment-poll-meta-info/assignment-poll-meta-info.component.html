@@ -95,6 +95,15 @@
                     }
                 </small>
             }
+            <!-- Max Yes Votes -->
+            @if ((poll.isMethodYNA || poll.isMethodYN) && poll.max_yes_votes_amount <= poll.max_votes_amount) {
+                <small>
+                    <span>
+                        {{ pollPropertyVerbose.max_yes_votes_amount | translate }}: {{ poll.max_yes_votes_amount }}
+                    </span>
+                    <br />
+                </small>
+            }
             <!-- Max Votes per Option -->
             @if (poll.max_votes_per_option > 1) {
                 <small>

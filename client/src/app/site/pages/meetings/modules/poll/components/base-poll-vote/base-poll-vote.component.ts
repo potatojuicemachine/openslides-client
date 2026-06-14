@@ -114,6 +114,14 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         return !this.poll.isListPoll && this.poll.max_votes_amount > 1;
     }
 
+    public get showAvailableYesVotes(): boolean {
+        return (
+            !this.poll.isListPoll &&
+            (this.poll.isMethodYNA || this.poll.isMethodYN) &&
+            this.poll.max_yes_votes_amount <= this.poll.max_votes_amount
+        );
+    }
+
     /**
      * Subset of global voteOptions that is used.
      */
@@ -240,6 +248,12 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         return this.votingService.getVotingProhibitionReasonVerboseFromName(errorName) || ``;
     }
 
+    public getYesVotesCount(user: ViewUser = this.user): number {
+        return Object.values((this.voteRequestData[user?.id]?.value ?? {}) as Record<number, string>).filter(
+            v => v === `Y`
+        ).length;
+    }
+
     public getVotesCount(user: ViewUser = this.user): number {
         if (this.voteRequestData[user?.id]) {
             if (this.poll.isMethodY && this.poll.max_votes_per_option > 1 && !this.isGlobalOptionSelected(user)) {
@@ -260,6 +274,10 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
             return `-`;
         }
         return this.poll.max_votes_amount - this.getVotesCount(user);
+    }
+
+    public getYesVotesAvailable(user: ViewUser = this.user): number | string {
+        return this.poll.max_yes_votes_amount - this.getYesVotesCount(user);
     }
 
     public getFormControl(optionId: number): UntypedFormControl {
@@ -285,6 +303,20 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     }
 
     public abstract getActionButtonClass(actions: VoteOption, option: ViewOption, user: ViewUser): string;
+
+    public isActionButtonDisabled(action: VoteOption, option: ViewOption, user: ViewUser = this.user): boolean {
+        if (action.vote !== `Y` || (!this.poll.isMethodYNA && !this.poll.isMethodYN)) {
+            return false;
+        }
+
+        if (this.voteRequestData[user?.id]?.value[option.id] === `Y`) {
+            return false;
+        }
+        const currentYesCount = Object.values(
+            (this.voteRequestData[user?.id]?.value ?? {}) as Record<number, string>
+        ).filter(v => v === `Y`).length;
+        return currentYesCount >= this.poll.max_yes_votes_amount;
+    }
 
     public getActionButtonContentClass(voteOption: VoteOption, option: ViewOption, user: ViewUser = this.user): string {
         return this.getActionButtonClass(voteOption, option, user) ? `` : `button-content-opaque`;

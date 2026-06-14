@@ -143,6 +143,7 @@ export const PollPropertyVerbose = {
     global_abstain: _(`General abstain`),
     max_votes_amount: _(`Maximum amount of votes`),
     min_votes_amount: _(`Minimum amount of votes`),
+    max_yes_votes_amount: _(`Maximum amount of yes votes`),
     max_votes_per_option: _(`Maximum amount of votes per option`),
     live_voting_enabled: _(`Live voting enabled`)
 };

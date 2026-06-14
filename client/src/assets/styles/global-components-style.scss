@@ -63,13 +63,13 @@
     }
 
     .accentuated-background,
-    .accentuated-background button {
+    .accentuated-background button:not(.mat-mdc-button-disabled) {
         background-color: color.adjust(mat.m2-get-color-from-palette($background, background), $hue: $percent);
     }
 
     mat-card {
         .accentuated-background,
-        .accentuated-background button {
+        .accentuated-background button:not(.mat-mdc-button-disabled) {
             background-color: color.adjust(mat.m2-get-color-from-palette($background, card), $hue: $percent);
         }
     }

@@ -69,6 +69,14 @@
                                         </span>
                                     }
                                 </b>
+                                @if(showAvailableYesVotes){
+                                    <div></div>
+                                    <div></div>
+                                    <b class="text-right">
+                                        {{ 'Available Yes votes' | translate }}:
+                                        <b>{{ getYesVotesAvailable(delegation) }}/{{ poll.max_yes_votes_amount }}</b>
+                                    </b>
+                                }
                             </div>
                         }
                         <!-- Options and Actions -->
@@ -261,7 +269,7 @@
                                                 [attr.aria-checked]="
                                                     getActionButtonClass(action, option, delegation) ? 'true' : 'false'
                                                 "
-                                                [disabled]="isDeliveringVote(delegation)"
+                                                [disabled]="isDeliveringVote(delegation) || isActionButtonDisabled(action, option, delegation)"
                                                 (click)="saveSingleVote(option.id, action.vote, delegation)"
                                             >
                                                 <div
